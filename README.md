@@ -17,7 +17,7 @@ OUTPUT: ("String 1", 123, 99.9)
 
 To create a Named Tuple you first need to create a template which can be done by the following.
 ```java
-NamedTupleTemplate color = new NamedTuple.with("color", "r", "g", "b");
+NamedTupleTemplate color = new NamedTupleTemplate("color", "r", "g", "b");
 ```
 You can put any amount of string keys into the constructor (the first argument being the name rather then a key).
 Then use the template to create your named tuples like. (Will throw a exception if number of values does not match number of keys from template.
