@@ -1,29 +1,37 @@
-<h1 align="center">Template Repository</h1>
+<h1 align="center">JTuples</h1>
 
-  A Template Repository That I Can Use to Make New Repositories I Make in The Future Easier.                                                                                         
+  A Simple Tuple and Named Tuple Library for Java.                                                                                         
 
-## Plan To Add / To Do
+## How To Use
 
-- [ ] Item 1
-- [ ] Item 2
-- [ ] Item 3
+To create a basic Tuple you can do the following.
+```java
+Tuple myTuple = new Tuple("String 1", 123, 99.9f);
+```
+You can put any amount of any type of value into the contrutor, when printed it looks like this.
+```java
+System.out.println(myTuple);
 
-## How To Use (UI)
+OUTPUT: ("String 1", 123, 99.9)
+```
 
-Coming Soon.
+To create a Named Tuple you can do the following.
+```java
+NamedTuple myNamedTuple = new NamedTuple.with("color", "r", 255).end();
+```
+You can put any amount of any type of value into the with method (the first one taking a name also), they can also be chained infitly and end it with the end method.
+```java
+NamedTuple myNamedTuple = new NamedTuple.with("color", "r", 255).with("g", 255).with("b", 255).end();
+```
+when printed it looks like this.
+```java
+System.out.println(myNamedTuple);
 
-## How To Use (Command Line)
+OUTPUT: color(r=255, g=255, b=255)
+```
 
-Coming Soon.
+More Information Coming Soon.
 
-## Minimum \<Insert Language Here> Version
+## Minimum Java Version
 
-* Version of Language 
-
-## About This Project
-
-This is a template repository that I can use to make new repositories I make in the future easier.
-
-# Screen Shots
-
-Coming Soon.
+* Java 8
