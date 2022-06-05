@@ -8,26 +8,30 @@ To create a basic Tuple you can do the following.
 ```java
 Tuple myTuple = new Tuple("String 1", 123, 99.9f);
 ```
-You can put any amount of any type of value into the contrutor, when printed it looks like this.
+You can put any amount of any type of value into the constructor, when printed it looks like this.
 ```java
 System.out.println(myTuple);
 
 OUTPUT: ("String 1", 123, 99.9)
 ```
 
-To create a Named Tuple you can do the following.
+To create a Named Tuple you first need to create a template which can be done by the following.
 ```java
-NamedTuple myNamedTuple = new NamedTuple.with("color", "r", 255).end();
+NamedTupleTemplate color = new NamedTuple.with("color", "r", "g", "b");
 ```
-You can put any amount of any type of value into the with method (the first one taking a name also), they can also be chained infitly and end it with the end method.
+You can put any amount of string keys into the constructor (the first argument being the name rather then a key).
+Then use the template to create your named tuples like. (Will throw a exception if number of values does not match number of keys from template.
 ```java
-NamedTuple myNamedTuple = new NamedTuple.with("color", "r", 255).with("g", 255).with("b", 255).end();
+NamedTuple myNamedTuple = new NamedTuple(color, 0, 0, 0);
+NamedTuple myNamedTuple1 = new NamedTuple(color, 255, 255, 255);
+
+System.out.println(myNamedTuple);
+System.out.println(myNamedTuple1);
 ```
 when printed it looks like this.
-```java
-System.out.println(myNamedTuple);
-
-OUTPUT: color(r=255, g=255, b=255)
+```
+color(r=0, g=0, b=0)
+color(r=255, g=255, b=255)
 ```
 
 More Information Coming Soon.
