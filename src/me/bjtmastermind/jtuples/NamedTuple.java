@@ -2,35 +2,32 @@ package me.bjtmastermind.jtuples;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.TreeMap;
+import java.util.Set;
 
-@SuppressWarnings("rawtypes")
 public class NamedTuple {
 	private String name;
-	private List<TreeMap<String, Object>> namedtuple;
+	private LinkedHashMap<String, Object> namedtuple;
 	
-	public NamedTuple() {
-		this.name = "";
-		this.namedtuple = new ArrayList<>();
-	}
-	
-	private NamedTuple(String name, ArrayList<TreeMap<String, Object>> array) {
-		this.name = name;
-		this.namedtuple = array;
+	public NamedTuple(NamedTupleTemplate template, Object... values) throws Exception {
+		if(values.length != template.keyCount) {
+			throw new Exception("Value argument count is not equal to template argument count.");
+		}
+		this.name = template.name;
+		this.namedtuple = new LinkedHashMap<>();
+		for(int i = 0; i < template.keyCount; i++) {
+			this.namedtuple.put(template.keys[i], values[i]);
+		}
 	}
 	
 	public boolean containsAllKeys(String... keys) {
 		ArrayList<Boolean> check = new ArrayList<>();
 		for(String key : keys) {
-			for(int i = 0; i < this.namedtuple.size(); i++) {
-				TreeMap<String, Object> map = this.namedtuple.get(i);
-				for(String tupleKey : map.keySet()) {
-					if(tupleKey.equals(key)) {
-						check.add(this.namedtuple.get(i).containsKey(key));
-					}
+			for(String tupleKey : this.namedtuple.keySet()) {
+				if(tupleKey.equals(key)) {
+					check.add(this.namedtuple.containsKey(key));
 				}
 			}
 		}
@@ -44,14 +41,11 @@ public class NamedTuple {
 	public boolean containsAllValues(Object... values) {
 		ArrayList<Boolean> check = new ArrayList<>();
 		for(Object value : values) {
-			for(int i = 0; i < this.namedtuple.size(); i++) {
-				TreeMap<String, Object> map = this.namedtuple.get(i);
-				for(Object tupleValue : map.values()) {
+				for(Object tupleValue : this.namedtuple.values()) {
 					if(tupleValue.equals(value)) {
-						check.add(this.namedtuple.get(i).containsValue(value));
+						check.add(this.namedtuple.containsValue(value));
 					}
 				}
-			}
 		}
 		if(check.size() == values.length) {
 			return true;
@@ -61,51 +55,24 @@ public class NamedTuple {
 	}
 	
 	public boolean containsKey(String key) {
-		for(int i = 0; i < namedtuple.size(); i++) {
-			TreeMap<String, Object> map = namedtuple.get(i);
-			for(Object obj : map.keySet()) {
-				if(obj.equals(key)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return this.namedtuple.containsKey(key);
 	}
 	
 	public boolean containsValue(Object value) {
-		for(int i = 0; i < namedtuple.size(); i++) {
-			TreeMap<String, Object> map = namedtuple.get(i);
-			for(Object obj : map.values()) {
-				if(obj.equals(value)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return this.namedtuple.containsValue(value);
 	}
 
 	public Object get(String key) {
-		for(int i = 0; i < namedtuple.size(); i++) {
-			TreeMap<String, Object> map = namedtuple.get(i);
-			for(Object obj : map.keySet()) {
-				if(obj.equals(key)) {
-					return map.get(obj);
-				}
-			}
-		}
-		return null;
+		return this.namedtuple.get(key);
 	}
 
 	public int indexOfKey(String key) {
 		int index = 0;
-		for(int i = 0; i < namedtuple.size(); i++) {
-			TreeMap<String, Object> map = namedtuple.get(i);
-			for(Object obj : map.keySet()) {
-				if(obj.equals(key)) {
-					return index;
-				} else {
-					index++;
-				}
+		for(String tupleKey : this.namedtuple.keySet()) {
+			if(tupleKey.equals(key)) {
+				return index;
+			} else {
+				index++;
 			}
 		}
 		return -1;
@@ -113,45 +80,31 @@ public class NamedTuple {
 	
 	public int indexOfValue(Object value) {
 		int index = 0;
-		for(int i = 0; i < namedtuple.size(); i++) {
-			TreeMap<String, Object> map = namedtuple.get(i);
-			for(Object obj : map.values()) {
-				if(obj.equals(value)) {
-					return index;
-				} else {
-					index++;
-				}
+		for(Object tupleValue : this.namedtuple.values()) {
+			if(tupleValue.equals(value)) {
+				return index;
+			} else {
+				index++;
 			}
 		}
 		return -1;
 	}
 
 	public boolean isEmpty() {
-		return namedtuple.isEmpty();
-	}
-
-	public Iterator iterator() {
-		return namedtuple.iterator();
+		return this.namedtuple.isEmpty();
 	}
 	
-	public ArrayList<String> keySet() {
-		ArrayList<String> set = new ArrayList<>();
-		for(int i = 0; i < this.size(); i++) {
-			set.addAll(this.namedtuple.get(i).keySet());
-		}
-		return set;
+	public Set<String> keySet() {
+		return this.namedtuple.keySet();
 	}
 
 	public int lastIndexOfKey(String key) {
-		int index = namedtuple.size() - 1;
-		for(int i = namedtuple.size() - 1; i >= 0; i--) {
-			TreeMap<String, Object> map = namedtuple.get(i);
-			for(Object obj : map.keySet()) {
-				if(obj.equals(key)) {
-					return index;
-				} else {
-					index--;
-				}
+		int index = this.namedtuple.size() - 1;
+		for(String tupleKey : this.namedtuple.keySet()) {
+			if(tupleKey.equals(key)) {
+				return index;
+			} else {
+				index--;
 			}
 		}
 		return -1;
@@ -159,14 +112,11 @@ public class NamedTuple {
 	
 	public int lastIndexOfValue(Object value) {
 		int index = namedtuple.size() - 1;
-		for(int i = namedtuple.size() - 1; i >= 0; i--) {
-			TreeMap<String, Object> map = namedtuple.get(i);
-			for(Object obj : map.values()) {
-				if(obj.equals(value)) {
-					return index;
-				} else {
-					index--;
-				}
+		for(Object tupleValue : this.namedtuple.values()) {
+			if(tupleValue.equals(value)) {
+				return index;
+			} else {
+				index--;
 			}
 		}
 		return -1;
@@ -183,89 +133,46 @@ public class NamedTuple {
 		return new Tuple(merged);
 	}
 
-	public ListIterator tupleIterator() {
-		return namedtuple.listIterator();
-	}
-
-	public ListIterator tupleIterator(int arg0) {
-		try {
-			return namedtuple.listIterator(arg0);
-		} catch(IndexOutOfBoundsException e) {
-			throw e;
-		}
-	}
-
 	public int size() {
 		return namedtuple.size();
 	}
 	
-	public TreeMap<String, Object> toHashMap() {
-		TreeMap<String, Object> outMap = new TreeMap<>();
-		for(int i = 0; i < this.namedtuple.size(); i++) {
-			for(String key : this.namedtuple.get(i).keySet()) {
-				outMap.put(key, this.namedtuple.get(i).get(key));
-			}			
-		}
+	public LinkedHashMap<String, Object> toHashMap() {
+		LinkedHashMap<String, Object> outMap = new LinkedHashMap<>();
+		for(String key : this.namedtuple.keySet()) {
+			outMap.put(key, this.namedtuple.get(key));
+		}			
 		return outMap;
 	}
 	
 	@Override
 	public String toString() {
 		String out = this.name + "(";
-		for(int i = 0; i < namedtuple.size(); i++) {
-			TreeMap<String, Object> map = namedtuple.get(i);
-			for(Object obj : map.keySet()) {
-				if(i >= namedtuple.size() - 1) {
-					if(map.get(obj) instanceof String) {
-						out += obj + "=";
-						out += "\"";
-						out += map.get(obj) + "\"";
-					} else {
-						out += obj + "=" + map.get(obj);
-					}
+		int i = 0;
+		for(String key : this.namedtuple.keySet()) {
+			if(i >= this.namedtuple.size() - 1) {
+				if(this.namedtuple.get(key) instanceof String) {
+					out += key + "=";
+					out += "\"";
+					out += this.namedtuple.get(key) + "\"";
 				} else {
-					if(map.get(obj) instanceof String) {
-						out += obj + "=";
-						out += "\"";
-						out += map.get(obj) + "\", ";
-					} else {
-						out += obj + "=" + map.get(obj) + ", ";
-					}
+					out += key + "=" + this.namedtuple.get(key);
 				}
-			}		
-		}
-		return out += ")";
-	}
-	
-	public ArrayList<Object> values() {
-		ArrayList<Object> values = new ArrayList<>();
-		for(int i = 0; i < this.namedtuple.size(); i++) {
-			for(Object value : this.namedtuple.get(i).values()) {
-				values.add(value);
+			} else {
+				if(this.namedtuple.get(key) instanceof String) {
+					out += key + "=";
+					out += "\"";
+					out += this.namedtuple.get(key) + "\", ";
+				} else {
+					out += key + "=" + this.namedtuple.get(key) + ", ";
+				}
 			}
-		}	
-		return values;
+			i++;
+		}
+		return out + ")";
 	}
 	
-	public static class with {
-		private String name;
-		private ArrayList<TreeMap<String, Object>> array;
-		
-		public with(String name, String key, Object value) {
-			this.name = name;
-			this.array = new ArrayList<>();
-			with(key, value);
-		}
-		
-		public with with(String key, Object value) {
-			TreeMap<String, Object> item = new TreeMap<>();
-			item.put(key, value);
-			array.add(item);
-			return this;
-		}
-		
-		public NamedTuple end() {
-			return new NamedTuple(name, array);
-		}
+	public Collection<Object> values() {
+		return this.namedtuple.values();
 	}
 }
